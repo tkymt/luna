@@ -1,17 +1,13 @@
 module;
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN // Windowsヘッダーからあまり使用されないものを除外します。
-#endif
 #include <Windows.h>
-#include <cstdlib>
 #include <tchar.h>
 
 module Win32Application;
-
-
+import Application;
+import Graphics;
 namespace luna
 {
-	int Win32Application::Run(luna::Win32Application *application, HINSTANCE hInstance, int nCmdShow)
+	int Win32Application::Run(Application *application, HINSTANCE hInstance, int nCmdShow)
 	{
 		WNDCLASSEX windowClassEx{
 			.cbSize{sizeof(WNDCLASSEX)},
