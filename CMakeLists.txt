@@ -38,7 +38,8 @@ target_sources(${PROJECT_NAME} PUBLIC
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_compile_definitions(${PROJECT_NAME} PUBLIC
   _UNICODE
-  UNICODE)
+  UNICODE
+  VK_USE_PLATFORM_WIN32_KHR)
 target_link_libraries(${PROJECT_NAME} PRIVATE
   Vulkan::Vulkan
   glm::glm)

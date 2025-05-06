@@ -5,7 +5,7 @@
 
 namespace luna
 {
-  int Win32Application::Run(Application &application, HINSTANCE hInstance, int nCmdShow)
+  int Win32Application::Run(HINSTANCE hInstance, int nCmdShow)
   {
     WNDCLASSEX windowClassEx{
         .cbSize = sizeof(WNDCLASSEX),
@@ -32,6 +32,7 @@ namespace luna
       ErrorExit();
     }
 
+    Application application;
     m_hwnd = CreateWindow(windowClassEx.lpszClassName,
                           _TEXT("Luna Application"),
                           WS_OVERLAPPEDWINDOW,
@@ -42,7 +43,7 @@ namespace luna
                           NULL,
                           NULL,
                           hInstance,
-                          &application);
+                          reinterpret_cast<LPVOID>(&application));
 
     if (m_hwnd == NULL)
     {
@@ -74,23 +75,27 @@ namespace luna
 
   LRESULT CALLBACK Win32Application::WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
   {
-    luna::Application *application{reinterpret_cast<luna::Application *>(GetWindowLongPtr(hwnd, GWLP_USERDATA))};
-    switch (msg)
-    {
-    case WM_CREATE:
+    if (msg == WM_CREATE)
     {
       CREATESTRUCT *createStruct{reinterpret_cast<CREATESTRUCT *>(lParam)};
-      application = reinterpret_cast<luna::Application *>(createStruct->lpCreateParams);
+      Application *application = reinterpret_cast<luna::Application *>(createStruct->lpCreateParams);
       SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(application));
+      RECT clientRect;
+      GetClientRect(hwnd, &clientRect);
+      LONG width = clientRect.right - clientRect.left;
+      LONG height = clientRect.bottom - clientRect.top;
+      application->OnWindowCreated(createStruct->hInstance, hwnd, width, height);
       return 0;
     }
-    case WM_DESTROY:
+    else if (msg == WM_DESTROY)
+    {
+      Application *application = reinterpret_cast<Application *>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
       application->Terminate();
       PostQuitMessage(EXIT_SUCCESS);
       return 0;
-    default:
-      return DefWindowProc(hwnd, msg, wParam, lParam);
     }
+
+    return DefWindowProc(hwnd, msg, wParam, lParam);
   }
 
   void Win32Application::ErrorExit()

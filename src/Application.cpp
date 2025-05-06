@@ -3,18 +3,24 @@
 
 namespace luna
 {
-    Application::Application(VulkanRenderer &renderer)
-        : m_renderer{renderer}
-    {
-    }
-
     void Application::Run(std::stop_token st)
     {
-        m_renderer.run();
+        if (!m_renderer)
+            return;
+
+        m_renderer->run();
+
         while (!st.stop_requested())
         {
-            m_renderer.mainLoop();
+            m_renderer->mainLoop();
         }
-        m_renderer.cleanup();
+
+        m_renderer->cleanup();
+    }
+    void Application::OnWindowCreated(HINSTANCE hInstance, HWND hwnd, LONG width, LONG height)
+    {
+        // VulkanRendererのインスタンスを作成
+        // WindowData構造体を使用して、ウィンドウデータを渡す
+        m_renderer = std::make_unique<VulkanRenderer>(VulkanRenderer::WindowData{hInstance, hwnd, width, height});
     }
 }

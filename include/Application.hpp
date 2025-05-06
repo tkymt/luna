@@ -3,17 +3,20 @@
 
 #include "ThreadBase.hpp"
 #include "VulkanRenderer.hpp"
+#include <memory>
 
 namespace luna
 {
   class Application : public ThreadBase
   {
   public:
-    Application(VulkanRenderer &);
+    Application() = default;
+    void OnWindowCreated(HINSTANCE hInstance, HWND hwnd, LONG width, LONG height);
 
   private:
     void Run(std::stop_token) override final;
-    VulkanRenderer &m_renderer;
+
+    std::unique_ptr<VulkanRenderer> m_renderer{nullptr};
   };
 
 } // namespace luna

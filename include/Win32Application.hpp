@@ -8,7 +8,7 @@ namespace luna
   class Win32Application
   {
   public:
-    static int Run(Application &, const HINSTANCE, const int);
+    static int Run(const HINSTANCE, const int);
     static HWND GetHwnd();
 
   protected:

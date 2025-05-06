@@ -1,43 +1,32 @@
 #include "VulkanRenderer.hpp"
+#include <iostream>
 
 namespace luna
 {
-
-  VulkanRenderer::VulkanRenderer(WindowData WindowData)
-      : m_windowData{WindowData}
+  VulkanRenderer::VulkanRenderer(WindowData windowData)
+      : m_windowData{windowData}
   {
   }
 
   void VulkanRenderer::run()
   {
-    initVulkan();
-    mainLoop();
-    cleanup();
+    try
+    {
+      // コンテキストをインスタンス化
+      vk::raii::Context context;
+    }
+    catch (const std::exception &e)
+    {
+      std::cerr << e.what() << '\n';
+    }
   }
 
-  void VulkanRenderer::initVulkan()
+  void VulkanRenderer::mainLoop()
   {
-    createInstance();
+    // メインループの処理をここに記述
   }
-
-  void VulkanRenderer::mainLoop() {}
-
   void VulkanRenderer::cleanup()
   {
-    m_instance.destroy();
+    // クリーンアップ処理をここに記述
   }
-
-  void VulkanRenderer::createInstance()
-  {
-    vk::ApplicationInfo applicationInfo{
-        "Luna",
-        vk::makeApiVersion(0, 1, 0, 0),
-        "No Engine",
-        vk::makeApiVersion(0, 1, 0, 0),
-        vk::ApiVersion10};
-    vk::InstanceCreateInfo instanceCreateInfo{
-
-    };
-  }
-
 } // namespace luna

@@ -7,7 +7,6 @@ namespace luna
   class ThreadBase
   {
   public:
-    ThreadBase() = default;
     ~ThreadBase();
     void Start();
     void Terminate();
